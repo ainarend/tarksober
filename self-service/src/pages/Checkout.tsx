@@ -36,6 +36,9 @@ export default function Checkout() {
     ])
       .then(([foundProduct, checkout]) => {
         setProduct(foundProduct);
+        if (foundProduct?.app_slug) {
+          sessionStorage.setItem("checkout_app_slug", foundProduct.app_slug);
+        }
         saveToken(checkout.purchase_token);
 
         const links = checkout.payment_methods?.banklinks || [];
