@@ -4,19 +4,20 @@ import { getProducts, createCheckout, type Product } from "@/lib/api";
 import { usePurchaseToken } from "@/hooks/usePurchaseToken";
 import { Loader2 } from "lucide-react";
 
-interface Banklink {
+interface PaymentMethod {
   name: string;
   display_name: string;
   logo_url: string;
   url: string;
-  country: string;
+  country?: string;
 }
 
 export default function Checkout() {
   const { productId } = useParams<{ productId: string }>();
   const { saveToken } = usePurchaseToken();
   const [product, setProduct] = useState<Product | null>(null);
-  const [banklinks, setBanklinks] = useState<Banklink[]>([]);
+  const [banklinks, setBanklinks] = useState<PaymentMethod[]>([]);
+  const [cards, setCards] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,8 +39,9 @@ export default function Checkout() {
         saveToken(checkout.purchase_token);
 
         const links = checkout.payment_methods?.banklinks || [];
-        const ee = links.filter((b: Banklink) => b.country === "ee");
+        const ee = links.filter((b: PaymentMethod) => b.country === "ee");
         setBanklinks(ee);
+        setCards(checkout.payment_methods?.cards || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -108,7 +110,7 @@ export default function Checkout() {
 
       {banklinks.length > 0 && (
         <>
-          <p className="text-sm font-medium text-center mb-4">Vali oma pank</p>
+          <p className="text-sm font-medium text-center mb-4">Pangalink</p>
           <div className="grid grid-cols-3 gap-3">
             {banklinks.map((bank) => (
               <a
@@ -123,6 +125,30 @@ export default function Checkout() {
                 />
                 <span className="text-xs text-muted-foreground text-center">
                   {bank.display_name}
+                </span>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+
+      {cards.length > 0 && (
+        <>
+          <p className="text-sm font-medium text-center mb-4 mt-6">Kaardimakse</p>
+          <div className="grid grid-cols-4 gap-3">
+            {cards.map((card) => (
+              <a
+                key={card.name}
+                href={card.url}
+                className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
+              >
+                <img
+                  src={card.logo_url}
+                  alt={card.display_name}
+                  className="h-8 w-auto"
+                />
+                <span className="text-xs text-muted-foreground text-center">
+                  {card.display_name}
                 </span>
               </a>
             ))}
