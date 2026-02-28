@@ -95,6 +95,9 @@ export default function Checkout() {
           <p className="text-xs text-muted-foreground">
             Kuni {product.max_devices} seadet
           </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Ühekordne makse. Ei pikene automaatselt.
+          </p>
         </div>
       ) : !error ? (
         <div className="flex justify-center py-8">
