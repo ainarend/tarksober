@@ -1,58 +1,52 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { getProducts, createCheckout, type Product } from "@/lib/api";
 import { usePurchaseToken } from "@/hooks/usePurchaseToken";
 import { Loader2 } from "lucide-react";
 
+interface Banklink {
+  name: string;
+  display_name: string;
+  logo_url: string;
+  url: string;
+  country: string;
+}
+
 export default function Checkout() {
   const { productId } = useParams<{ productId: string }>();
-  const navigate = useNavigate();
   const { saveToken } = usePurchaseToken();
-  const [creating, setCreating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // We need the product info — fetch all products for this app and find ours
-  // Since we only have productId, we fetch by querying all apps and finding the match
   const [product, setProduct] = useState<Product | null>(null);
+  const [banklinks, setBanklinks] = useState<Banklink[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!productId) return;
 
-    // Try known app slugs to find the product
     const appSlugs = ["loogikasober", "sonasober", "unesober"];
 
-    Promise.all(appSlugs.map((slug) => getProducts(slug)))
-      .then((results) => {
-        const allProducts = results.flat();
-        const found = allProducts.find((p) => p.id === productId);
-        setProduct(found || null);
+    // Fetch product info and create checkout session in parallel
+    Promise.all([
+      Promise.all(appSlugs.map((slug) => getProducts(slug))).then((results) => {
+        const all = results.flat();
+        return all.find((p) => p.id === productId) || null;
+      }),
+      createCheckout(productId),
+    ])
+      .then(([foundProduct, checkout]) => {
+        setProduct(foundProduct);
+        saveToken(checkout.purchase_token);
+
+        const links = checkout.payment_methods?.banklinks || [];
+        const ee = links.filter((b: Banklink) => b.country === "ee");
+        setBanklinks(ee);
+        setLoading(false);
       })
-      .catch(() => setError("Toote laadimine ebaonnestus"));
+      .catch((err) => {
+        setError(err.message || "Makse loomine ebaõnnestus");
+        setLoading(false);
+      });
   }, [productId]);
-
-  const handlePay = async () => {
-    if (!productId) return;
-    setCreating(true);
-    setError(null);
-
-    try {
-      const result = await createCheckout(productId);
-      saveToken(result.purchase_token);
-
-      // Redirect to Maksekeskus hosted payment page
-      const hostedUrl = result.payment_methods?.other?.redirect;
-      if (hostedUrl) {
-        window.location.href = hostedUrl;
-      } else {
-        setError("Makseviisi ei leitud");
-        setCreating(false);
-      }
-    } catch (err: any) {
-      setError(err.message || "Makse loomine ebaonnestus");
-      setCreating(false);
-    }
-  };
 
   if (!productId) {
     return (
@@ -63,20 +57,20 @@ export default function Checkout() {
   }
 
   const formatPrice = (cents: number) => {
-    return `${(cents / 100).toFixed(2)} \u20ac`;
+    return `${(cents / 100).toFixed(2).replace(".", ",")} \u20ac`;
   };
 
   const formatDuration = (days: number) => {
     if (days >= 365) return `${Math.round(days / 365)} aasta`;
     if (days >= 30) return `${Math.round(days / 30)} kuud`;
-    return `${days} paeva`;
+    return `${days} päeva`;
   };
 
   return (
     <div className="container max-w-lg mx-auto py-16 px-4">
       <h1 className="text-2xl font-bold mb-8 text-center">Osta Premium</h1>
 
-      {product ? (
+      {product && (
         <div className="bg-card border rounded-xl p-6 mb-6">
           <h2 className="text-xl font-semibold mb-1">{product.name}</h2>
           {product.description && (
@@ -99,32 +93,44 @@ export default function Checkout() {
             Ühekordne makse. Ei pikene automaatselt.
           </p>
         </div>
-      ) : !error ? (
-        <div className="flex justify-center py-8">
+      )}
+
+      {loading && (
+        <div className="flex flex-col items-center gap-3 py-8">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Laadin makseviise...</p>
         </div>
-      ) : null}
+      )}
 
       {error && (
         <p className="text-destructive text-sm text-center mb-4">{error}</p>
       )}
 
-      <button
-        onClick={handlePay}
-        disabled={creating || !product}
-        className="w-full py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
-      >
-        {creating ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Suunan maksma...
-          </>
-        ) : (
-          "Maksa pangalingiga"
-        )}
-      </button>
+      {banklinks.length > 0 && (
+        <>
+          <p className="text-sm font-medium text-center mb-4">Vali oma pank</p>
+          <div className="grid grid-cols-3 gap-3">
+            {banklinks.map((bank) => (
+              <a
+                key={bank.name}
+                href={bank.url}
+                className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
+              >
+                <img
+                  src={bank.logo_url}
+                  alt={bank.display_name}
+                  className="h-8 w-auto"
+                />
+                <span className="text-xs text-muted-foreground text-center">
+                  {bank.display_name}
+                </span>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
 
-      <p className="text-xs text-muted-foreground text-center mt-4">
+      <p className="text-xs text-muted-foreground text-center mt-6">
         Turvaline makse Maksekeskus vahendusel
       </p>
     </div>
