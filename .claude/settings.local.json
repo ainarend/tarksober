@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "WebFetch(domain:developer.makecommerce.net)",
+      "WebFetch(domain:makecommerce.net)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:developer.maksekeskus.ee)",
+      "Bash(deno:*)",
+      "Bash(curl:*)",
+      "Bash(/Users/ainarend/.deno/bin/deno:*)",
+      "Bash(npm install:*)",
+      "Bash(xargs ls:*)",
+      "Bash(npm run:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}

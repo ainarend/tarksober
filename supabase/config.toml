@@ -1,0 +1,18 @@
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+
+[db]
+port = 54322
+
+[auth]
+enabled = true
+site_url = "https://minu.tarksober.ee"
+additional_redirect_urls = ["http://localhost:5173", "https://minu.tarksober.ee"]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+otp_length = 6
+otp_expiry = 3600
