@@ -6,7 +6,7 @@ export default function Header() {
 
   return (
     <header className="border-b bg-card">
-      <div className="container flex h-14 items-center justify-between">
+      <div className="max-w-4xl mx-auto px-4 flex h-14 items-center justify-between">
         <a href="https://tarksober.ee" className="font-extrabold text-lg tracking-tight focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded">
           Tark<span className="text-primary">Sõber</span>
         </a>
