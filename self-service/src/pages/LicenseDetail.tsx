@@ -26,7 +26,7 @@ export default function LicenseDetail() {
       toast.success("Seade eemaldatud");
     },
     onError: () => {
-      toast.error("Seadme eemaldamine ebaonnestus");
+      toast.error("Seadme eemaldamine ebaõnnestus");
     },
   });
 

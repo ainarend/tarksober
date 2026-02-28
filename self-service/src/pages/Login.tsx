@@ -24,7 +24,7 @@ export default function Login() {
     setLoading(false);
 
     if (error) {
-      setError("Sisselogimislingi saatmine ebaonnestus. Proovi uuesti.");
+      setError("Sisselogimislingi saatmine ebaõnnestus. Proovi uuesti.");
     } else {
       setSent(true);
     }

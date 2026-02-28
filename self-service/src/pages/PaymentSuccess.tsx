@@ -87,7 +87,7 @@ export default function PaymentSuccess() {
     <div className="container max-w-lg mx-auto py-16 px-4">
       <div className="text-center mb-8">
         <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold mb-2">Makse onnestus!</h1>
+        <h1 className="text-2xl font-bold mb-2">Makse õnnestus!</h1>
         <p className="text-muted-foreground">
           Sisesta oma e-posti aadress litsentsi saamiseks
         </p>

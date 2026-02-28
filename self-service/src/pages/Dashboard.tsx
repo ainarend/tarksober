@@ -54,7 +54,7 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4 text-center">
-        <p className="text-destructive">Litsentside laadimine ebaonnestus</p>
+        <p className="text-destructive">Litsentside laadimine ebaõnnestus</p>
       </div>
     );
   }

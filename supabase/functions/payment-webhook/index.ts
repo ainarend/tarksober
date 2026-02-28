@@ -2,36 +2,36 @@ import { getServiceClient } from "../_shared/supabase-client.ts";
 import { verifyMac } from "../_shared/maksekeskus.ts";
 
 Deno.serve(async (req) => {
-  // No CORS needed — server-to-server from Maksekeskus
-  if (req.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 });
-  }
-
   try {
-    const body = await req.text();
-
-    // Maksekeskus sends URL-encoded form data with `json` and `mac` fields,
-    // or sometimes raw JSON. Handle both.
     let jsonString: string;
     let mac: string;
 
-    const contentType = req.headers.get("content-type") || "";
+    if (req.method === "GET") {
+      // Maksekeskus sends GET with ?json=...&mac=...
+      const url = new URL(req.url);
+      jsonString = url.searchParams.get("json") || "";
+      mac = url.searchParams.get("mac") || "";
+    } else if (req.method === "POST") {
+      const body = await req.text();
+      const contentType = req.headers.get("content-type") || "";
 
-    if (contentType.includes("application/x-www-form-urlencoded")) {
-      const params = new URLSearchParams(body);
-      jsonString = params.get("json") || "";
-      mac = params.get("mac") || "";
+      if (contentType.includes("application/x-www-form-urlencoded")) {
+        const params = new URLSearchParams(body);
+        jsonString = params.get("json") || "";
+        mac = params.get("mac") || "";
+      } else {
+        const parsed = JSON.parse(body);
+        mac = parsed.mac || "";
+        const { mac: _mac, ...rest } = parsed;
+        jsonString = JSON.stringify(rest);
+      }
     } else {
-      // Try parsing as JSON with mac field
-      const parsed = JSON.parse(body);
-      mac = parsed.mac || "";
-      // Reconstruct JSON string without mac for verification
-      const { mac: _mac, ...rest } = parsed;
-      jsonString = JSON.stringify(rest);
+      return new Response("Method not allowed", { status: 405 });
     }
 
     if (!jsonString || !mac) {
-      return new Response("Bad request", { status: 400 });
+      console.error("Missing json or mac params");
+      return new Response("OK", { status: 200 });
     }
 
     // Verify MAC signature
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
 
     if (!isValid) {
       console.error("Invalid MAC signature");
-      return new Response("Unauthorized", { status: 401 });
+      return new Response("OK", { status: 200 });
     }
 
     const data = JSON.parse(jsonString);
@@ -48,12 +48,12 @@ Deno.serve(async (req) => {
     const status = data.status;
 
     if (!transactionId || !status) {
-      return new Response("Bad request: missing transaction or status", { status: 400 });
+      console.error("Missing transaction or status");
+      return new Response("OK", { status: 200 });
     }
 
     const supabase = getServiceClient();
 
-    // Idempotency: check current status
     const { data: purchase, error: fetchError } = await supabase
       .from("purchases")
       .select("id, mk_status")
@@ -62,16 +62,13 @@ Deno.serve(async (req) => {
 
     if (fetchError || !purchase) {
       console.error("Purchase not found for transaction:", transactionId);
-      // Return 200 anyway — Maksekeskus expects 2xx
       return new Response("OK", { status: 200 });
     }
 
-    // If already completed, skip (idempotent)
     if (purchase.mk_status === "COMPLETED") {
       return new Response("OK", { status: 200 });
     }
 
-    // Update status
     const updateFields: Record<string, unknown> = {
       mk_status: status,
     };
@@ -85,11 +82,9 @@ Deno.serve(async (req) => {
       .update(updateFields)
       .eq("id", purchase.id);
 
-    // Return 200 immediately as required by Maksekeskus (< 30 seconds)
     return new Response("OK", { status: 200 });
   } catch (err) {
     console.error("payment-webhook error:", err);
-    // Still return 200 to avoid retries for malformed requests
     return new Response("OK", { status: 200 });
   }
 });
