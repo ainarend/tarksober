@@ -9,7 +9,7 @@ port = 54322
 [auth]
 enabled = true
 site_url = "https://minu.tarksober.ee"
-additional_redirect_urls = ["http://localhost:5173", "https://minu.tarksober.ee"]
+additional_redirect_urls = ["http://localhost:5173", "http://localhost:5173/auth/callback", "https://minu.tarksober.ee", "https://minu.tarksober.ee/auth/callback"]
 
 [auth.email]
 enable_signup = true

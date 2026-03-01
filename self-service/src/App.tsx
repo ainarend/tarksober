@@ -7,6 +7,7 @@ import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCancelled from "@/pages/PaymentCancelled";
 import Dashboard from "@/pages/Dashboard";
 import LicenseDetail from "@/pages/LicenseDetail";
+import AuthCallback from "@/pages/AuthCallback";
 import NotFound from "@/pages/NotFound";
 import AuthGuard from "@/components/layout/AuthGuard";
 
@@ -20,6 +21,7 @@ function App() {
       <main id="main-content" className="flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/checkout/:productId" element={<Checkout />} />
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/cancelled" element={<PaymentCancelled />} />
