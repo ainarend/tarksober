@@ -1,5 +1,8 @@
 import { supabase } from "./supabase";
-import { FunctionsHttpError } from "@supabase/supabase-js";
+
+const FUNCTIONS_BASE = import.meta.env.VITE_SUPABASE_URL
+  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
+  : "";
 
 async function callFunction<T>(
   name: string,
@@ -7,31 +10,41 @@ async function callFunction<T>(
     method?: "GET" | "POST";
     body?: Record<string, unknown>;
     params?: Record<string, string>;
+    auth?: boolean;
   } = {},
 ): Promise<T> {
-  const { method = "GET", body, params } = options;
+  const { method = "GET", body, params, auth = false } = options;
 
-  // Append query params to function name for GET requests
-  let path = name;
+  let url = `${FUNCTIONS_BASE}/${name}`;
   if (params) {
     const searchParams = new URLSearchParams(params);
-    path += `?${searchParams}`;
+    url += `?${searchParams}`;
   }
 
-  const { data, error } = await supabase.functions.invoke(path, {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+  };
+
+  if (auth) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
+  }
+
+  const response = await fetch(url, {
     method,
-    body: body || undefined,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
   });
 
-  if (error) {
-    if (error instanceof FunctionsHttpError) {
-      const errBody = await error.context.json().catch(() => null);
-      throw new Error(errBody?.error || `HTTP ${error.context.status}`);
-    }
-    throw error;
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: "Request failed" }));
+    throw new Error(error.error || `HTTP ${response.status}`);
   }
 
-  return data as T;
+  return response.json();
 }
 
 // --- Public API ---
@@ -110,11 +123,11 @@ export interface LicenseWithDevices {
 }
 
 export function linkAccount(): Promise<{ linked_count: number }> {
-  return callFunction("link-account", { method: "POST" });
+  return callFunction("link-account", { method: "POST", auth: true });
 }
 
 export function getMyLicenses(): Promise<LicenseWithDevices[]> {
-  return callFunction("my-licenses");
+  return callFunction("my-licenses", { auth: true });
 }
 
 export function deactivateDevice(
@@ -122,6 +135,7 @@ export function deactivateDevice(
 ): Promise<{ ok: boolean }> {
   return callFunction("deactivate-device", {
     method: "POST",
+    auth: true,
     body: { activation_id: activationId },
   });
 }
