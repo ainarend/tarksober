@@ -8,7 +8,7 @@ const SELF_SERVICE_URL = "https://minu.tarksober.ee";
 const apps = [
   {
     name: "Loogikasõber",
-    description: "Igapäevased loogikamängud lastele. Arenda loogikat mängides!",
+    description: "Nutikas õppemäng lastele. 23 minimängu ja igapäevased mõistatused 3–12-aastastele.",
     icon: iconLoogikasober,
     status: "live" as const,
     href: "https://loogikasober.tarksober.ee/",
