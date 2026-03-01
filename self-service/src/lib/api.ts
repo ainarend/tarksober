@@ -28,9 +28,10 @@ async function callFunction<T>(
 
   if (auth) {
     const { data: { session } } = await supabase.auth.getSession();
-    if (session?.access_token) {
-      headers["Authorization"] = `Bearer ${session.access_token}`;
+    if (!session?.access_token) {
+      throw new Error("NOT_AUTHENTICATED");
     }
+    headers["Authorization"] = `Bearer ${session.access_token}`;
   }
 
   const response = await fetch(url, {
@@ -40,6 +41,9 @@ async function callFunction<T>(
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("NOT_AUTHENTICATED");
+    }
     const error = await response.json().catch(() => ({ error: "Request failed" }));
     throw new Error(error.error || `HTTP ${response.status}`);
   }
