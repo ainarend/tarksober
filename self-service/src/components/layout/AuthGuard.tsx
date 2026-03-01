@@ -4,19 +4,15 @@ import { useEffect, useRef } from "react";
 import { linkAccount } from "@/lib/api";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading } = useAuth();
   const linked = useRef(false);
 
   useEffect(() => {
     if (user && !linked.current) {
       linked.current = true;
-      linkAccount().catch((err) => {
-        if (err?.message === "NOT_AUTHENTICATED") {
-          signOut();
-        }
-      });
+      linkAccount().catch(() => {});
     }
-  }, [user, signOut]);
+  }, [user]);
 
   if (loading) {
     return (

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getMyLicenses, type LicenseWithDevices } from "@/lib/api";
-import { useAuth } from "@/hooks/useAuth";
 import LicenseKeyDisplay from "@/components/shared/LicenseKeyDisplay";
 import { Key, Monitor, ChevronRight, Loader2 } from "lucide-react";
 
@@ -39,18 +38,10 @@ function LicenseCard({ license }: { license: LicenseWithDevices }) {
 }
 
 export default function Dashboard() {
-  const { signOut } = useAuth();
   const { data: licenses, isLoading, error } = useQuery({
     queryKey: ["my-licenses"],
     queryFn: getMyLicenses,
-    retry: (failureCount, err) =>
-      err?.message !== "NOT_AUTHENTICATED" && failureCount < 2,
   });
-
-  if (error?.message === "NOT_AUTHENTICATED") {
-    signOut();
-    return <Navigate to="/login" replace />;
-  }
 
   if (isLoading) {
     return (
