@@ -80,10 +80,16 @@ export default function TermsOfSale() {
             Tegemist on ühekordse maksega — litsents ei pikene automaatselt.
           </p>
 
-          <h2>7. Tagastuspoliitika</h2>
+          <h2>7. Taganemisõigus ja tagastuspoliitika</h2>
           <p>
-            Kuna tegemist on digitaalse sisuga, mida saab kohe pärast ostu kasutama
-            hakata, on tagastamisõigus piiratud vastavalt VÕS § 56 lg 1 p 13.
+            Tarbijal on õigus põhjust avaldamata taganeda veebipoe kaudu sõlmitud lepingust
+            14 päeva jooksul alates ostu sooritamisest.
+          </p>
+          <p>
+            Kuna tegemist on digitaalse sisuga, millele antakse ligipääs kohe pärast ostu
+            sooritamist, nõustub ostja taganemisõigusest loobuma vastavalt VÕS § 56 lg 1 p 13.
+            Nõusolek taganemisõigusest loobumiseks antakse ostuprotsessi käigus müügitingimustega
+            nõustudes.
           </p>
           <p>
             Kui Teil tekib tootega probleeme, võtke meiega ühendust aadressil{" "}
@@ -93,7 +99,38 @@ export default function TermsOfSale() {
             . Lahendame iga juhtumi individuaalselt ja pakume lahenduse mõistliku aja jooksul.
           </p>
 
-          <h2>8. Maksete vahendaja</h2>
+          <h2>8. Vaidluste lahendamine</h2>
+          <p>
+            Kui Teil on pretensioone ostetud toote osas, võtke meiega ühendust aadressil{" "}
+            <a href="mailto:tugi@tarksober.ee" className="text-primary hover:underline">
+              tugi@tarksober.ee
+            </a>
+            . Vastame Teie pöördumisele 15 päeva jooksul.
+          </p>
+          <p>
+            Kui vaidlust ei õnnestu lahendada kokkuleppel, on tarbijal õigus pöörduda{" "}
+            <a
+              href="https://komisjon.ee"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Tarbijavaidluste komisjoni
+            </a>
+            {" "}poole (Endla 10A, Tallinn, 10122, info@komisjon.ee). Vaidluste lahendamise
+            platvormi leiab ka Euroopa Komisjoni{" "}
+            <a
+              href="https://ec.europa.eu/consumers/odr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              veebilehelt
+            </a>
+            .
+          </p>
+
+          <h2>9. Maksete vahendaja</h2>
           <p>
             Makseid vahendab Maksekeskus AS (registrikood 12268475), kes on Finantsinspektsiooni
             poolt litsentseeritud makseasutus. Lisainfo:{" "}
@@ -108,7 +145,7 @@ export default function TermsOfSale() {
             .
           </p>
 
-          <h2>9. Kontakt</h2>
+          <h2>10. Kontakt</h2>
           <p>
             Küsimuste korral võtke meiega ühendust:{" "}
             <a href="mailto:tugi@tarksober.ee" className="text-primary hover:underline">
