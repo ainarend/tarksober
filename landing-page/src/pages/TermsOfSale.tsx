@@ -38,7 +38,7 @@ export default function TermsOfSale() {
             <li>Teid suunatakse minu.tarksober.ee iseteeninduskeskkonda.</li>
             <li>Valige makseviis ja sooritage makse.</li>
             <li>Pärast edukat makset sisestage oma e-posti aadress.</li>
-            <li>Litsentsivõti saadetakse Teie e-posti aadressile.</li>
+            <li>Litsentsivõti kuvatakse kohe iseteeninduskeskkonnas.</li>
             <li>Sisestage litsentsivõti rakenduses premium-sisu aktiveerimiseks.</li>
           </ol>
 
@@ -58,6 +58,7 @@ export default function TermsOfSale() {
           <ul className="list-disc pl-6 space-y-1">
             <li>Eesti pangalingid (Swedbank, SEB, LHV, Coop Pank, Luminor/Citadele)</li>
             <li>Kaardimakse (Visa, Mastercard)</li>
+            <li>Google Pay ja Apple Pay</li>
           </ul>
           <p>
             Makse töötlemine ja turvaline suhtlus pangaga toimub Maksekeskus AS
@@ -66,10 +67,11 @@ export default function TermsOfSale() {
 
           <h2>5. Kättesaadavus</h2>
           <p>
-            Pärast edukat makset ja e-posti sisestamist saadetakse litsentsivõti
-            kohe Teie e-posti aadressile. Litsents on kohe kasutatav ja seda saab
-            aktiveerida tootega määratud arvul seadmetel. Litsents kehtib alates
-            aktiveerimise hetkest tootega määratud ajaperioodi jooksul.
+            Pärast edukat makset kuvatakse litsentsivõti kohe iseteeninduskeskkonnas.
+            Hiljem on litsentsivõti kättesaadav iseteeninduses ostuga seotud e-posti aadressiga
+            sisse logides. Litsents on kohe kasutatav ja seda saab aktiveerida tootega
+            määratud arvul seadmetel. Litsents kehtib alates aktiveerimise hetkest
+            tootega määratud ajaperioodi jooksul.
           </p>
 
           <h2>6. Hinnad</h2>
@@ -89,9 +91,6 @@ export default function TermsOfSale() {
               info@tarksober.ee
             </a>
             . Lahendame iga juhtumi individuaalselt ja pakume lahenduse mõistliku aja jooksul.
-          </p>
-          <p>
-            Kui toode ei tööta tehnilistel põhjustel, tagastame makse täies ulatuses.
           </p>
 
           <h2>8. Maksete vahendaja</h2>
