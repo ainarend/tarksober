@@ -127,7 +127,15 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border px-4 py-8 text-center text-sm text-muted-foreground">
         <p className="font-semibold text-foreground mb-1">TarkSõber</p>
-        <p>© {new Date().getFullYear()} TarkSõber. Kõik õigused kaitstud.</p>
+        <p className="mb-1">AA Tekk OÜ · Registrikood 16194325 · Filmi 5-17, Tallinn, Harjumaa, Eesti</p>
+        <p className="mb-3">
+          <a href="mailto:info@tarksober.ee" className="hover:text-foreground transition-colors">info@tarksober.ee</a>
+        </p>
+        <div className="flex justify-center gap-4 mb-3">
+          <a href="/muugitingimused" className="hover:text-foreground transition-colors">Müügitingimused</a>
+          <a href="/privaatsuspoliitika" className="hover:text-foreground transition-colors">Privaatsuspoliitika</a>
+        </div>
+        <p>© {new Date().getFullYear()} AA Tekk OÜ. Kõik õigused kaitstud.</p>
       </footer>
     </div>
   );

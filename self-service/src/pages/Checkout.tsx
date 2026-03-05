@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProducts, createCheckout, type Product } from "@/lib/api";
 import { usePurchaseToken } from "@/hooks/usePurchaseToken";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 
 interface PaymentMethod {
   name: string;
@@ -20,6 +20,7 @@ export default function Checkout() {
   const [cards, setCards] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     if (!productId) return;
@@ -111,53 +112,99 @@ export default function Checkout() {
         <p className="text-destructive text-sm text-center mb-4">{error}</p>
       )}
 
-      {banklinks.length > 0 && (
-        <>
-          <p className="text-sm font-medium text-center mb-4">Pangalink</p>
-          <div className="grid grid-cols-3 gap-3">
-            {banklinks.map((bank) => (
-              <a
-                key={bank.name}
-                href={bank.url}
-                className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
-              >
-                <img
-                  src={bank.logo_url}
-                  alt={bank.display_name}
-                  className="h-8 w-auto"
-                />
-                <span className="text-xs text-muted-foreground text-center">
-                  {bank.display_name}
-                </span>
-              </a>
-            ))}
-          </div>
-        </>
+      {!loading && !error && (banklinks.length > 0 || cards.length > 0) && (
+        <label className="flex items-start gap-3 mb-6 cursor-pointer group">
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={termsAccepted}
+            onClick={() => setTermsAccepted(!termsAccepted)}
+            className={`mt-0.5 flex-shrink-0 h-5 w-5 rounded border-2 transition-colors flex items-center justify-center ${
+              termsAccepted
+                ? "bg-primary border-primary text-primary-foreground"
+                : "border-muted-foreground/50 group-hover:border-primary"
+            }`}
+          >
+            {termsAccepted && <Check size={14} strokeWidth={3} />}
+          </button>
+          <span className="text-sm text-muted-foreground">
+            Olen tutvunud ja nõustun{" "}
+            <a
+              href="https://tarksober.ee/muugitingimused"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              müügitingimustega
+            </a>
+            {" "}ja{" "}
+            <a
+              href="https://tarksober.ee/privaatsuspoliitika"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              privaatsuspoliitikaga
+            </a>
+          </span>
+        </label>
       )}
 
-      {cards.length > 0 && (
-        <>
-          <p className="text-sm font-medium text-center mb-4 mt-6">Kaardimakse</p>
-          <div className="grid grid-cols-4 gap-3">
-            {cards.map((card) => (
-              <a
-                key={card.name}
-                href={card.url}
-                className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
-              >
-                <img
-                  src={card.logo_url}
-                  alt={card.display_name}
-                  className="h-8 w-auto"
-                />
-                <span className="text-xs text-muted-foreground text-center">
-                  {card.display_name}
-                </span>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
+      <div className={termsAccepted ? "" : "opacity-50 pointer-events-none"}>
+        {banklinks.length > 0 && (
+          <>
+            <p className="text-sm font-medium text-center mb-4">Pangalink</p>
+            <div className="grid grid-cols-3 gap-3">
+              {banklinks.map((bank) => (
+                <a
+                  key={bank.name}
+                  href={termsAccepted ? bank.url : undefined}
+                  aria-disabled={!termsAccepted}
+                  tabIndex={termsAccepted ? undefined : -1}
+                  className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
+                >
+                  <img
+                    src={bank.logo_url}
+                    alt={bank.display_name}
+                    className="h-8 w-auto"
+                  />
+                  <span className="text-xs text-muted-foreground text-center">
+                    {bank.display_name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
+
+        {cards.length > 0 && (
+          <>
+            <p className="text-sm font-medium text-center mb-4 mt-6">Kaardimakse</p>
+            <div className="grid grid-cols-4 gap-3">
+              {cards.map((card) => (
+                <a
+                  key={card.name}
+                  href={termsAccepted ? card.url : undefined}
+                  aria-disabled={!termsAccepted}
+                  tabIndex={termsAccepted ? undefined : -1}
+                  className="flex flex-col items-center gap-2 p-4 border rounded-xl bg-card hover:border-primary hover:shadow-sm transition-all"
+                >
+                  <img
+                    src={card.logo_url}
+                    alt={card.display_name}
+                    className="h-8 w-auto"
+                  />
+                  <span className="text-xs text-muted-foreground text-center">
+                    {card.display_name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
 
       <p className="text-xs text-muted-foreground text-center mt-6">
         Turvaline makse Maksekeskus vahendusel
