@@ -88,8 +88,7 @@ export default function PrivacyPolicy() {
 
           <h2>9. Küpsised</h2>
           <p>
-            Kasutame ainult tehniliselt vajalikke küpsiseid (autentimine, sessiooni haldamine).
-            Me ei kasuta turundus- ega analüütikaküpsiseid.
+            Me ei kasuta küpsiseid. Autentimise andmed salvestatakse brauseri kohalikku mällu (localStorage).
           </p>
 
           <h2>10. Kontakt</h2>
