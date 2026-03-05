@@ -129,7 +129,7 @@ const Index = () => {
         <p className="font-semibold text-foreground mb-1">TarkSõber</p>
         <p className="mb-1">AA Tekk OÜ · Registrikood 16194325 · Filmi 5-17, Tallinn, Harjumaa, Eesti</p>
         <p className="mb-3">
-          <a href="mailto:info@tarksober.ee" className="hover:text-foreground transition-colors">info@tarksober.ee</a>
+          <a href="mailto:tugi@tarksober.ee" className="hover:text-foreground transition-colors">tugi@tarksober.ee</a>
         </p>
         <div className="flex justify-center gap-4 mb-3">
           <a href="/muugitingimused" className="hover:text-foreground transition-colors">Müügitingimused</a>

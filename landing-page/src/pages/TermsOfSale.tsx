@@ -23,7 +23,7 @@ export default function TermsOfSale() {
             <li><strong>Ettevõtte nimi:</strong> AA Tekk OÜ</li>
             <li><strong>Registrikood:</strong> 16194325</li>
             <li><strong>Aadress:</strong> Filmi 5-17, Tallinn, Harjumaa, Eesti</li>
-            <li><strong>E-post:</strong> info@tarksober.ee</li>
+            <li><strong>E-post:</strong> tugi@tarksober.ee</li>
           </ul>
 
           <h2>2. Tooted ja teenused</h2>
@@ -87,8 +87,8 @@ export default function TermsOfSale() {
           </p>
           <p>
             Kui Teil tekib tootega probleeme, võtke meiega ühendust aadressil{" "}
-            <a href="mailto:info@tarksober.ee" className="text-primary hover:underline">
-              info@tarksober.ee
+            <a href="mailto:tugi@tarksober.ee" className="text-primary hover:underline">
+              tugi@tarksober.ee
             </a>
             . Lahendame iga juhtumi individuaalselt ja pakume lahenduse mõistliku aja jooksul.
           </p>
@@ -111,8 +111,8 @@ export default function TermsOfSale() {
           <h2>9. Kontakt</h2>
           <p>
             Küsimuste korral võtke meiega ühendust:{" "}
-            <a href="mailto:info@tarksober.ee" className="text-primary hover:underline">
-              info@tarksober.ee
+            <a href="mailto:tugi@tarksober.ee" className="text-primary hover:underline">
+              tugi@tarksober.ee
             </a>
           </p>
 
