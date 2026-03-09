@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.aatekk.logic_pal",
+      "sha256_cert_fingerprints": [
+        "72:D8:75:0B:D7:E0:04:9C:58:BB:5B:3B:10:47:EB:03:80:7F:4B:80:D6:39:6B:95:DC:3D:36:F2:CB:DC"
+      ]
+    }
+  }
+]
