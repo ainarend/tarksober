@@ -57,7 +57,7 @@ export default function PaymentSuccess() {
   };
 
   const deepLinkUrl = result
-    ? `https://tarksober.ee/${result.app_slug}/activate?code=${result.license_key}`
+    ? `https://www.tarksober.ee/${result.app_slug}/activate?code=${result.license_key}`
     : "";
 
   if (!token && !result) {
