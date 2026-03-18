@@ -97,9 +97,9 @@ export default function LicenseDetail() {
           </label>
           <div className="flex items-start gap-6">
             <div className="relative bg-white rounded-xl border p-4">
-              <QRCodeSVG value={deepLinkUrl} size={160} className="blur-[2px]" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="bg-black/75 text-white text-sm font-semibold px-3 py-1.5 rounded-lg">
+              <QRCodeSVG value={deepLinkUrl} size={160} className="blur-sm" />
+              <div className="absolute inset-0 bg-white/60 rounded-xl flex items-center justify-center">
+                <span className="bg-black text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md">
                   Tulekul
                 </span>
               </div>
