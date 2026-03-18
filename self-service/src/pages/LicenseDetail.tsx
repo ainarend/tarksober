@@ -5,6 +5,7 @@ import { getMyLicenses, deactivateDevice } from "@/lib/api";
 import LicenseKeyDisplay from "@/components/shared/LicenseKeyDisplay";
 import { toast } from "sonner";
 import { ArrowLeft, Monitor, Trash2, Loader2 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function LicenseDetail() {
   const { licenseId } = useParams<{ licenseId: string }>();
@@ -61,6 +62,7 @@ export default function LicenseDetail() {
   }
 
   const isExpired = license.is_expired || license.is_revoked;
+  const deepLinkUrl = `https://www.tarksober.ee/${license.app_slug}/activate?code=${license.license_key}`;
 
   return (
     <div className="container max-w-2xl mx-auto py-8 px-4">
@@ -87,6 +89,17 @@ export default function LicenseDetail() {
         </label>
         <LicenseKeyDisplay licenseKey={license.license_key} />
       </div>
+
+      {!isExpired && (
+        <div className="mb-8">
+          <label className="text-sm font-medium text-muted-foreground block mb-2">
+            Skaneeri appi avamiseks
+          </label>
+          <div className="bg-white rounded-xl border p-4 inline-block">
+            <QRCodeSVG value={deepLinkUrl} size={160} />
+          </div>
+        </div>
+      )}
 
       <div>
         <h2 className="font-semibold mb-3">
