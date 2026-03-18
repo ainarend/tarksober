@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMyLicenses, deactivateDevice } from "@/lib/api";
 import LicenseKeyDisplay from "@/components/shared/LicenseKeyDisplay";
 import { toast } from "sonner";
-import { ArrowLeft, Monitor, Trash2, Loader2 } from "lucide-react";
+import { ArrowLeft, Monitor, Trash2, Loader2, ExternalLink } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function LicenseDetail() {
@@ -92,11 +92,31 @@ export default function LicenseDetail() {
 
       {!isExpired && (
         <div className="mb-8">
-          <label className="text-sm font-medium text-muted-foreground block mb-2">
-            Skaneeri kood "{license.product?.name || license.app_slug}" automaatseks avamiseks
+          <label className="text-sm font-medium text-muted-foreground block mb-3">
+            Ava kood automaatselt "{license.product?.name || license.app_slug}" äpis
           </label>
-          <div className="bg-white rounded-xl border p-4 inline-block">
-            <QRCodeSVG value={deepLinkUrl} size={160} />
+          <div className="flex items-start gap-6">
+            <div className="relative bg-white rounded-xl border p-4">
+              <QRCodeSVG value={deepLinkUrl} size={160} className="blur-[2px]" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="bg-black/75 text-white text-sm font-semibold px-3 py-1.5 rounded-lg">
+                  Tulekul
+                </span>
+              </div>
+            </div>
+            <div className="relative">
+              <a
+                href={deepLinkUrl}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium opacity-50 pointer-events-none"
+                aria-disabled="true"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Ava äpis
+              </a>
+              <span className="block mt-2 bg-black/75 text-white text-xs font-semibold px-2.5 py-1 rounded-lg w-fit">
+                Tulekul
+              </span>
+            </div>
           </div>
         </div>
       )}
