@@ -93,7 +93,7 @@ export default function LicenseDetail() {
       {!isExpired && (
         <div className="mb-8">
           <label className="text-sm font-medium text-muted-foreground block mb-2">
-            Skaneeri koodi automaatseks sisestamiseks {license.product?.name || license.app_slug} äppi
+            Skaneeri kood {license.product?.name || license.app_slug} automaatseks avamiseks
           </label>
           <div className="bg-white rounded-xl border p-4 inline-block">
             <QRCodeSVG value={deepLinkUrl} size={160} />
