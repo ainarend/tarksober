@@ -59,6 +59,8 @@ export interface Product {
   duration_days: number;
   max_devices: number;
   sort_order: number;
+  original_price_cents: number | null;
+  sale_ends_at: string | null;
 }
 
 export function getProducts(appSlug: string): Promise<Product[]> {

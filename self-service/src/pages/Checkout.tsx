@@ -85,6 +85,11 @@ export default function Checkout() {
             </p>
           )}
           <div className="flex items-baseline gap-2 mb-1">
+            {product.original_price_cents != null && (
+              <span className="text-xl font-bold text-muted-foreground line-through">
+                {formatPrice(product.original_price_cents)}
+              </span>
+            )}
             <span className="text-3xl font-bold">
               {formatPrice(product.price_cents)}
             </span>

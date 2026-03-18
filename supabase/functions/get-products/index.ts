@@ -19,11 +19,22 @@ Deno.serve(async (req) => {
     const supabase = getServiceClient();
     const { data, error } = await supabase
       .from("products")
-      .select("id, app_slug, name, description, price_cents, currency, duration_days, max_devices, sort_order")
+      .select("id, app_slug, name, description, price_cents, currency, duration_days, max_devices, sort_order, original_price_cents, sale_ends_at")
       .eq("app_slug", appSlug)
       .eq("is_active", true)
       .order("sort_order")
       .order("price_cents");
+
+    // Clear expired sale fields before returning
+    if (data) {
+      const now = new Date();
+      for (const product of data) {
+        if (product.sale_ends_at && new Date(product.sale_ends_at) < now) {
+          product.original_price_cents = null;
+          product.sale_ends_at = null;
+        }
+      }
+    }
 
     if (error) {
       return new Response(
