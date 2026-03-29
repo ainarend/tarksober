@@ -6,8 +6,23 @@ schemas = ["public"]
 [db]
 port = 54322
 
+# Public functions — called without Authorization header
+[functions.get-products]
+verify_jwt = false
+[functions.get-payment-methods]
+verify_jwt = false
+[functions.create-checkout]
+verify_jwt = false
+[functions.collect-email]
+verify_jwt = false
 [functions.payment-webhook]
 verify_jwt = false
+# Called from Flutter apps without user auth
+[functions.activate-device]
+verify_jwt = false
+[functions.premium-status]
+verify_jwt = false
+
 
 [auth]
 enabled = true

@@ -15,16 +15,16 @@ export interface MaksekeskusTransaction {
     amount: string;
     currency: string;
     reference: string;
-    transaction_url: {
-      return_url: string;
-      cancel_url: string;
-      notification_url: string;
-    };
   };
   customer: {
     ip: string;
     country: string;
     locale: string;
+  };
+  transaction_url: {
+    return_url: string;
+    cancel_url: string;
+    notification_url: string;
   };
 }
 
@@ -59,16 +59,16 @@ export function buildTransactionPayload(
       amount,
       currency: params.currency,
       reference: params.reference,
-      transaction_url: {
-        return_url: params.returnUrl,
-        cancel_url: params.cancelUrl,
-        notification_url: params.notificationUrl,
-      },
     },
     customer: {
       ip: params.customerIp,
       country: params.country ?? "ee",
       locale: params.locale ?? "et",
+    },
+    transaction_url: {
+      return_url: params.returnUrl,
+      cancel_url: params.cancelUrl,
+      notification_url: params.notificationUrl,
     },
   };
 }
