@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 
     const { data: purchase, error: fetchError } = await supabase
       .from("purchases")
-      .select("id, mk_status")
+      .select("id, mk_status, mk_amount_cents, products (name, app_slug, duration_days)")
       .eq("mk_transaction_id", transactionId)
       .single();
 
@@ -81,6 +81,22 @@ Deno.serve(async (req) => {
       .from("purchases")
       .update(updateFields)
       .eq("id", purchase.id);
+
+    if (status === "COMPLETED") {
+      const ntfyTopic = Deno.env.get("NTFY_TOPIC");
+      if (ntfyTopic) {
+        const product = (purchase as any).products;
+        const amount = purchase.mk_amount_cents
+          ? `${(purchase.mk_amount_cents / 100).toFixed(2).replace(".", ",")}€`
+          : "";
+        const productName = product?.name || "Tundmatu toode";
+        fetch(`https://ntfy.sh/${ntfyTopic}`, {
+          method: "POST",
+          headers: { Title: `Uus ost: ${productName}`, Priority: "high", Tags: "moneybag" },
+          body: `${productName} — ${amount}`,
+        }).catch(() => {});
+      }
+    }
 
     return new Response("OK", { status: 200 });
   } catch (err) {
