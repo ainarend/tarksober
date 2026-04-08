@@ -4,8 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMyLicenses, deactivateDevice } from "@/lib/api";
 import LicenseKeyDisplay from "@/components/shared/LicenseKeyDisplay";
 import { toast } from "sonner";
-import { ArrowLeft, Monitor, Trash2, Loader2, ExternalLink } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
+import { ArrowLeft, Monitor, Trash2, Loader2 } from "lucide-react";
+// import { ExternalLink } from "lucide-react";
+// import { QRCodeSVG } from "qrcode.react";
 
 export default function LicenseDetail() {
   const { licenseId } = useParams<{ licenseId: string }>();
@@ -62,7 +63,7 @@ export default function LicenseDetail() {
   }
 
   const isExpired = license.is_expired || license.is_revoked;
-  const deepLinkUrl = `https://www.tarksober.ee/${license.app_slug}/activate?code=${license.license_key}`;
+  // const deepLinkUrl = `https://www.tarksober.ee/${license.app_slug}/activate?code=${license.license_key}`;
 
   return (
     <div className="container max-w-2xl mx-auto py-8 px-4">
@@ -92,6 +93,10 @@ export default function LicenseDetail() {
 
       {!isExpired && (
         <div className="mb-8">
+          <p className="text-sm text-muted-foreground">
+            Aktiveerimine QR-koodiga lisandub peagi — praegu sisesta kood käsitsi äpis.
+          </p>
+          {/* QR code + "Ava äpis" deep link — re-enable once published apps handle the activate deep link
           <label className="text-sm font-medium text-muted-foreground block mb-3">
             Ava kood automaatselt "{license.product?.name || license.app_slug}" äpis
           </label>
@@ -118,6 +123,7 @@ export default function LicenseDetail() {
               </span>
             </div>
           </div>
+          */}
         </div>
       )}
 
