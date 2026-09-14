@@ -1,8 +1,5 @@
 import { getServiceClient } from "../_shared/supabase-client.ts";
 import { verifyMac } from "../_shared/maksekeskus.ts";
-import { sendPurchaseNotification } from "../_shared/notify.ts";
-
-declare const EdgeRuntime: { waitUntil(promise: Promise<unknown>): void };
 
 Deno.serve(async (req) => {
   try {
@@ -59,7 +56,7 @@ Deno.serve(async (req) => {
 
     const { data: purchase, error: fetchError } = await supabase
       .from("purchases")
-      .select("id, mk_status, mk_amount_cents, products (name, app_slug, duration_days)")
+      .select("id, mk_status")
       .eq("mk_transaction_id", transactionId)
       .single();
 
@@ -85,23 +82,7 @@ Deno.serve(async (req) => {
       .update(updateFields)
       .eq("id", purchase.id);
 
-    if (status === "COMPLETED") {
-      const ntfyTopic = Deno.env.get("NTFY_TOPIC");
-      if (ntfyTopic) {
-        const product = (purchase as any).products;
-        const notification = sendPurchaseNotification({
-          topic: ntfyTopic,
-          productName: product?.name || "Tundmatu toode",
-          amountCents: purchase.mk_amount_cents,
-          token: Deno.env.get("NTFY_TOKEN"),
-        });
-        // Keep the worker alive until ntfy has answered; without this the
-        // runtime shuts down right after the response and drops the request.
-        EdgeRuntime.waitUntil(notification);
-      } else {
-        console.error("NTFY_TOPIC not set, skipping purchase notification");
-      }
-    }
+    // Purchase notification (ntfy) is sent by the purchase_completed_notify DB trigger.
 
     return new Response("OK", { status: 200 });
   } catch (err) {

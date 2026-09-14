@@ -19,3 +19,9 @@ supabase functions deploy <function-name>
 ## Maksekeskus Integration
 
 The `transaction_url` object (containing `return_url`, `cancel_url`, `notification_url`) must be nested **inside** the `transaction` object in the create-transaction payload — not at the top level. See `_shared/maksekeskus.ts`.
+
+## Purchase Notifications (ntfy)
+
+The "Uus ost" push notification is sent by the `purchase_completed_notify` database trigger (see migration 00007) via `pg_net`, **not** from the Edge Function. Edge Functions share egress IPs across Supabase customers and ntfy.sh rate-limits per IP, so requests from them get HTTP 429 "daily message quota reached". The database VM has its own address and is not affected.
+
+The ntfy topic lives in Supabase Vault under the secret name `ntfy_topic`. Responses are visible in `net._http_response` for debugging.
