@@ -74,7 +74,9 @@ export default function Checkout() {
 
   return (
     <div className="container max-w-lg mx-auto py-16 px-4">
-      <h1 className="text-2xl font-bold mb-8 text-center">Osta Premium</h1>
+      <h1 className="text-2xl font-bold mb-8 text-center">
+        {product?.app_slug === "loogikasober" ? "Toeta Loogikasõbra arendust" : "Osta Premium"}
+      </h1>
 
       {product && (
         <div className="bg-card border rounded-xl p-6 mb-6">
