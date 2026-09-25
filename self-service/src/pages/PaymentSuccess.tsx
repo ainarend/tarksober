@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
+import { Navigate } from "react-router-dom";
 import { usePurchaseToken } from "@/hooks/usePurchaseToken";
 import { collectEmail, type CollectEmailResult } from "@/lib/api";
+import { CHECKOUT_APP_KEY, CHECKOUT_KIND_KEY } from "@/lib/apps";
 import LicenseKeyDisplay from "@/components/shared/LicenseKeyDisplay";
 import { CheckCircle, Mail, Loader2, ExternalLink } from "lucide-react";
 
@@ -55,6 +57,13 @@ export default function PaymentSuccess() {
     setStatusMsg(null);
     setError("Makse kinnitus võtab tavapärasest kauem aega. Proovi mõne hetke pärast uuesti.");
   };
+
+  // A donation has no license to collect an email for. Maksekeskus may land the
+  // payer here instead of on /payment/thanks, so check what Checkout recorded.
+  if (sessionStorage.getItem(CHECKOUT_KIND_KEY) === "donation") {
+    const app = sessionStorage.getItem(CHECKOUT_APP_KEY) || "";
+    return <Navigate to={`/payment/thanks?app=${encodeURIComponent(app)}`} replace />;
+  }
 
   const deepLinkUrl = result
     ? `https://www.tarksober.ee/${result.app_slug}/activate?code=${result.license_key}`

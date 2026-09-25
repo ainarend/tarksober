@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProducts, createCheckout, type Product } from "@/lib/api";
 import { usePurchaseToken } from "@/hooks/usePurchaseToken";
+import { APPS, CHECKOUT_APP_KEY, CHECKOUT_KIND_KEY, checkoutTitle } from "@/lib/apps";
 import { Loader2, Check } from "lucide-react";
 
 interface PaymentMethod {
@@ -25,7 +26,7 @@ export default function Checkout() {
   useEffect(() => {
     if (!productId) return;
 
-    const appSlugs = ["loogikasober", "sonasober", "unesober"];
+    const appSlugs = Object.keys(APPS);
 
     // Fetch product info and create checkout session in parallel
     Promise.all([
@@ -37,8 +38,9 @@ export default function Checkout() {
     ])
       .then(([foundProduct, checkout]) => {
         setProduct(foundProduct);
-        if (foundProduct?.app_slug) {
-          sessionStorage.setItem("checkout_app_slug", foundProduct.app_slug);
+        if (foundProduct) {
+          sessionStorage.setItem(CHECKOUT_APP_KEY, foundProduct.app_slug);
+          sessionStorage.setItem(CHECKOUT_KIND_KEY, foundProduct.kind);
         }
         saveToken(checkout.purchase_token);
 
@@ -75,7 +77,7 @@ export default function Checkout() {
   return (
     <div className="container max-w-lg mx-auto py-16 px-4">
       <h1 className="text-2xl font-bold mb-8 text-center">
-        {product?.app_slug === "loogikasober" ? "Toeta Loogikasõbra arendust" : "Osta Premium"}
+        {product ? checkoutTitle(product.app_slug) : ""}
       </h1>
 
       {product && (
@@ -95,16 +97,26 @@ export default function Checkout() {
             <span className="text-3xl font-bold">
               {formatPrice(product.price_cents)}
             </span>
-            <span className="text-muted-foreground">
-              / {formatDuration(product.duration_days)}
-            </span>
+            {product.kind === "license" && (
+              <span className="text-muted-foreground">
+                / {formatDuration(product.duration_days)}
+              </span>
+            )}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Kuni {product.max_devices} seadet
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Ühekordne makse. Ei pikene automaatselt.
-          </p>
+          {product.kind === "license" ? (
+            <>
+              <p className="text-xs text-muted-foreground">
+                Kuni {product.max_devices} seadet
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Ühekordne makse. Ei pikene automaatselt.
+              </p>
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              Ühekordne toetus. Äpp jääb kõigile tasuta ja midagi ei pikene automaatselt.
+            </p>
+          )}
         </div>
       )}
 

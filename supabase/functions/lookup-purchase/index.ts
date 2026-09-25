@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     const { data: purchase, error } = await supabase
       .from("purchases")
-      .select("purchase_token")
+      .select("purchase_token, products (kind, app_slug)")
       .eq("mk_transaction_id", transactionId)
       .single();
 
@@ -32,7 +32,11 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ purchase_token: purchase.purchase_token }),
+      JSON.stringify({
+        purchase_token: purchase.purchase_token,
+        kind: (purchase as any).products?.kind,
+        app_slug: (purchase as any).products?.app_slug,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (_err) {

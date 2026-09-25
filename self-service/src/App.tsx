@@ -6,6 +6,7 @@ import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentReturn from "@/pages/PaymentReturn";
 import PaymentCancelled from "@/pages/PaymentCancelled";
+import PaymentThanks from "@/pages/PaymentThanks";
 import Dashboard from "@/pages/Dashboard";
 import LicenseDetail from "@/pages/LicenseDetail";
 import AuthCallback from "@/pages/AuthCallback";
@@ -27,6 +28,7 @@ function App() {
           <Route path="/payment/return" element={<PaymentReturn />} />
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/cancelled" element={<PaymentCancelled />} />
+          <Route path="/payment/thanks" element={<PaymentThanks />} />
           <Route
             path="/dashboard"
             element={
