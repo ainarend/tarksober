@@ -58,6 +58,7 @@ export interface Product {
   currency: string;
   duration_days: number;
   max_devices: number;
+  kind: "license" | "donation";
   sort_order: number;
   original_price_cents: number | null;
   sale_ends_at: string | null;

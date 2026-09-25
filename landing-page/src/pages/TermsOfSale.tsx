@@ -31,6 +31,12 @@ export default function TermsOfSale() {
             TarkSõber pakub digitaalseid premium-litsentse mobiilirakendustele (Loogikasõber, Unesõber, Sõnasõber).
             Litsents annab ligipääsu rakenduse premium-sisule kindlaks määratud ajaperioodiks.
           </p>
+          <p>
+            Lisaks saab rakenduste arendust toetada ühekordse toetusega (nt Sõnasõbra lehel
+            „Toeta meid“). Toetus on vabatahtlik makse, mille eest ei anta litsentsi ega muud
+            digitaalset sisu: rakendus jääb kõigile samadel tingimustel tasuta. Toetuse puhul
+            e-posti aadressi ei küsita ja makse ei pikene automaatselt.
+          </p>
 
           <h2>3. Ostuprotsess</h2>
           <ol className="list-decimal pl-6 space-y-1">

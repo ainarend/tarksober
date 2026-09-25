@@ -2,6 +2,8 @@ import { generateLicenseKey, isValidLicenseKey } from "./license-key.ts";
 import { isValidEmail, isValidUuid, maskEmail } from "./validation.ts";
 
 // Types matching our database schema
+export type ProductKind = "license" | "donation";
+
 export interface Product {
   id: string;
   app_slug: string;
@@ -11,6 +13,7 @@ export interface Product {
   currency: string;
   duration_days: number;
   max_devices: number;
+  kind: ProductKind;
   is_active: boolean;
   sort_order: number;
 }
@@ -116,6 +119,24 @@ export function canCollectEmail(purchase: Purchase): { ok: boolean; reason?: str
 
 export function calculateExpiresAt(startDate: Date, durationDays: number): Date {
   return new Date(startDate.getTime() + durationDays * 24 * 60 * 60 * 1000);
+}
+
+// --- Donations ---
+
+/** A donation is a plain payment: no license key, so no email step either. */
+export function grantsLicense(kind: ProductKind): boolean {
+  return kind === "license";
+}
+
+/** Where Maksekeskus sends the payer back after a successful payment. */
+export function paymentReturnUrl(
+  product: { kind: ProductKind; app_slug: string },
+  purchaseToken: string,
+): string {
+  const base = "https://minu.tarksober.ee/payment";
+  return grantsLicense(product.kind)
+    ? `${base}/success?token=${purchaseToken}`
+    : `${base}/thanks?app=${encodeURIComponent(product.app_slug)}`;
 }
 
 // --- Premium Status Logic ---

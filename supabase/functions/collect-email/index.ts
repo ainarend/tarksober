@@ -2,6 +2,7 @@ import { getServiceClient } from "../_shared/supabase-client.ts";
 import { corsHeaders, handleCors } from "../_shared/cors.ts";
 import { isValidEmail } from "../_shared/validation.ts";
 import { generateLicenseKey } from "../_shared/license-key.ts";
+import { grantsLicense } from "../_shared/business-logic.ts";
 
 Deno.serve(async (req) => {
   const corsResponse = handleCors(req);
@@ -38,7 +39,8 @@ Deno.serve(async (req) => {
           duration_days,
           max_devices,
           app_slug,
-          name
+          name,
+          kind
         )
       `)
       .eq("purchase_token", purchase_token)
@@ -48,6 +50,15 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Purchase not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const product = (purchase as any).products;
+
+    if (!grantsLicense(product.kind)) {
+      return new Response(
+        JSON.stringify({ error: "Donations have no license" }),
+        { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -74,7 +85,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    const product = (purchase as any).products;
     const now = new Date();
     const expiresAt = new Date(now.getTime() + product.duration_days * 24 * 60 * 60 * 1000);
 

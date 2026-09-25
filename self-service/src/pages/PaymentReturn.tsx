@@ -48,7 +48,9 @@ export default function PaymentReturn() {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data.purchase_token) {
+        if (data.kind === "donation") {
+          navigate(`/payment/thanks?app=${encodeURIComponent(data.app_slug || "")}`, { replace: true });
+        } else if (data.purchase_token) {
           saveToken(data.purchase_token);
           navigate("/payment/success", { replace: true });
         } else {

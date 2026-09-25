@@ -5,6 +5,7 @@ import {
   createAuthHeader,
   buildTransactionPayload,
 } from "../_shared/maksekeskus.ts";
+import { paymentReturnUrl } from "../_shared/business-logic.ts";
 
 Deno.serve(async (req) => {
   const corsResponse = handleCors(req);
@@ -25,7 +26,7 @@ Deno.serve(async (req) => {
     // Fetch product
     const { data: product, error: productError } = await supabase
       .from("products")
-      .select("id, price_cents, currency, name, app_slug")
+      .select("id, price_cents, currency, name, app_slug, kind")
       .eq("id", product_id)
       .eq("is_active", true)
       .single();
@@ -69,7 +70,7 @@ Deno.serve(async (req) => {
       currency: product.currency,
       reference,
       customerIp,
-      returnUrl: `https://minu.tarksober.ee/payment/success?token=${purchaseToken}`,
+      returnUrl: paymentReturnUrl(product, purchaseToken),
       cancelUrl: "https://minu.tarksober.ee/payment/cancelled",
       notificationUrl: `${supabaseUrl}/functions/v1/payment-webhook`,
     });

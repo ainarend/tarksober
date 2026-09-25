@@ -7,6 +7,8 @@ import {
   canCollectEmail,
   calculateExpiresAt,
   isPremiumActive,
+  grantsLicense,
+  paymentReturnUrl,
   type License,
   type Purchase,
 } from "./business-logic.ts";
@@ -247,4 +249,28 @@ Deno.test("isPremiumActive finds first valid among multiple", () => {
     { is_active: true, license: makeLicense() },
   ]);
   assertEquals(result.is_premium, true);
+});
+
+// --- Donations ---
+
+Deno.test("grantsLicense is true for license products", () => {
+  assertEquals(grantsLicense("license"), true);
+});
+
+Deno.test("grantsLicense is false for donations", () => {
+  assertEquals(grantsLicense("donation"), false);
+});
+
+Deno.test("paymentReturnUrl sends license purchases to the email step with their token", () => {
+  assertEquals(
+    paymentReturnUrl({ kind: "license", app_slug: "loogikasober" }, "abc123"),
+    "https://minu.tarksober.ee/payment/success?token=abc123",
+  );
+});
+
+Deno.test("paymentReturnUrl sends donations to the thank-you page for their app", () => {
+  assertEquals(
+    paymentReturnUrl({ kind: "donation", app_slug: "sonasober" }, "abc123"),
+    "https://minu.tarksober.ee/payment/thanks?app=sonasober",
+  );
 });

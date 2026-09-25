@@ -1,14 +1,9 @@
 import { XCircle } from "lucide-react";
-
-const APP_URLS: Record<string, { name: string; url: string }> = {
-  loogikasober: { name: "Loogikasõber", url: "https://loogikasober.tarksober.ee" },
-  sonasober: { name: "Sõnasõber", url: "https://sonasober.tarksober.ee" },
-  unesober: { name: "Unesõber", url: "https://unesober.tarksober.ee" },
-};
+import { APPS, CHECKOUT_APP_KEY } from "@/lib/apps";
 
 export default function PaymentCancelled() {
-  const slug = sessionStorage.getItem("checkout_app_slug") || "";
-  const app = APP_URLS[slug];
+  const slug = sessionStorage.getItem(CHECKOUT_APP_KEY) || "";
+  const app = APPS[slug];
 
   return (
     <div className="container max-w-lg mx-auto py-16 px-4 text-center">
