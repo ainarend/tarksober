@@ -23,7 +23,8 @@ const apps = [
     name: "Sõnasõber",
     description: "Igapäev uus lihtsate sõnade ja kordustega lugu, et aidata lastel lugema õppida.",
     icon: iconSonasober,
-    status: "coming" as const,
+    status: "live" as const,
+    href: "https://sonasober.tarksober.ee/",
   },
 ];
 
